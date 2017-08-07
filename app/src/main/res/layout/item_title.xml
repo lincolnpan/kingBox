@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/news_vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_main"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"/>
+
+        <LinearLayout
+            android:id="@+id/ll_main_dot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/vp_main"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/boradcast_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/news_vp"
+        android:drawableLeft="@drawable/broadcast_icon"
+        android:drawablePadding="6dp"
+        android:padding="8dp"
+        android:text="公告:帝王盒子上线啦"/>
+
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/left_icon"
+        android:drawablePadding="6dp"
+        android:paddingBottom="18dp"
+        android:paddingTop="18dp"
+        android:text="国外直播秀场"
+        android:textColor="#1C1A1D"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:visibility="gone"/>
+</LinearLayout>

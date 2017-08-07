@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/top_layout"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="帝王宝盒使用声明："
+        android:textSize="18sp"
+        android:textColor="#222222"
+        android:textStyle="normal"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#2A2A2A"
+        android:textSize="14sp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="12dp"
+        android:text="1.本应用为第三方智能分析，为用户提供解析app并预览等服务。
+        \n\n2.应用内容均来源于第三方APP及网站，本应用权为提供预览，不涉及任何人工编辑和整理，也不对任何来源于第三方的内容(包括但不限于直播、直播描述、直播插图)承担责任。
+       \n\n3.任何公司、产品、或者个人认为本内容涉嫌侵犯您的版权或应用权，您应该及时向我们提供书面权利通知、并提供身份证、权属证明及侵犯情况等投诉材料，请于我们联系。
+       \n\n4.部分视频资源采源于国外的服务器，受美国法律保护！如果您是中国国籍或者未满18岁请您离开本平台。"/>
+</LinearLayout>

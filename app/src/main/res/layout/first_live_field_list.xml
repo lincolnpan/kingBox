@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/top_layout"
+        layout="@layout/top_layout" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/live_r_v"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+    <!--<GridView
+        android:id="@+id/field_list_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_layout"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:visibility="gone"></GridView>-->
+
+    <TextView
+        android:id="@+id/hint_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="无数据或数据加载异常"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+</RelativeLayout>
