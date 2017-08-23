@@ -27,12 +27,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kingbox.R;
 import com.kingbox.jsbridge.BridgeWebView;
 import com.kingbox.jsbridge.DefaultHandler;
+import com.kingbox.service.entity.UserInfo;
 import com.kingbox.utils.Config;
 import com.kingbox.utils.PreferencesUtils;
 import com.kingbox.utils.ToastUtils;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Timer;
@@ -40,6 +47,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 
 @SuppressLint("HandlerLeak")
@@ -259,10 +267,45 @@ public class BannerActivity extends BaseActivity {
 
             webView.setDefaultHandler(new DefaultHandler());
 
-            webView.loadUrl(this.advLink);
-
+            getUserAgentType();
 
         }
+    }
+    private void getUserAgentType() {
+        String mobile = PreferencesUtils.getString(BannerActivity.this, "mobile");
+        String token = PreferencesUtils.getString(BannerActivity.this, "token");
+        OkHttpUtils.get().url("http://admin.haizisou.cn/api/getUserAgentType?mobile=" + mobile + "&token=" + token).id(1701)   // 请求Id
+                .build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Config.isLogin = false;
+                ToastUtils.ToastMessage(BannerActivity.this, "网络异常");
+                finish();
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Gson gson = new Gson();
+                    UserInfo userInfo = gson.fromJson(jsonObject.toString(), UserInfo.class);
+                    if (userInfo.isSuccess() && 0 == userInfo.getCode()) {  // 成功
+                        Config.isLogin = true;
+                        PreferencesUtils.putInt(BannerActivity.this, "type", userInfo.getType());
+                        PreferencesUtils.putString(BannerActivity.this, "wechat", userInfo.getWechat());
+                        webView.loadUrl(BannerActivity.this.advLink);
+                    } else {
+                        if (userInfo.getMsg().contains("token失效")) {
+                            ToastUtils.ToastMessage(BannerActivity.this, "登录失效,请重新登录");
+                            startActivity(new Intent(BannerActivity.this, LoginActivity.class));
+                        } else {
+                            ToastUtils.ToastMessage(BannerActivity.this, "接口出错");
+                        }
+                    }
+                } catch (JSONException e) {
+                }
+            }
+        });
     }
 
     public void pickFile() {

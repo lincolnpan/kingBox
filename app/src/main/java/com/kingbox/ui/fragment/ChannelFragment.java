@@ -11,6 +11,7 @@ import android.view.View;
 import com.kingbox.R;
 import com.kingbox.adapter.ChannelAdapter;
 import com.kingbox.service.entity.LiveField;
+import com.kingbox.utils.PreferencesUtils;
 import com.kingbox.utils.ToastUtils;
 import com.kingbox.view.RecycleViewDivider;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -57,6 +58,7 @@ public class ChannelFragment extends LazyLoadFragment {
 
     @Override
     public void initViews(View view) {
+
         // 设置布局管理
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // 设置item间隔
@@ -112,6 +114,8 @@ public class ChannelFragment extends LazyLoadFragment {
                                 String value = objJson.getString("Value");
                                 if (TextUtils.isEmpty(value)) value = "";
                                 fileUrl = value;
+                                String ziFile = fileUrl.substring(0,fileUrl.lastIndexOf("/")+1);
+                                PreferencesUtils.putString(getActivity(), "ziFile", ziFile);
                                 getData();
                                 return;
                             }
@@ -130,6 +134,14 @@ public class ChannelFragment extends LazyLoadFragment {
 
     private void getData() {
         list.clear();
+
+        String baseUrl;
+        try {
+            baseUrl = fileUrl.substring(0, fileUrl.lastIndexOf("/") + 1);
+        } catch (Exception e){
+            baseUrl = "";
+        }
+        channelAdapter.setBaseUrl(baseUrl);
 
         OkHttpUtils.get().url(fileUrl)
                 .tag(105)
@@ -163,9 +175,6 @@ public class ChannelFragment extends LazyLoadFragment {
                             tempList.add(liveField);
                         }
                     }
-                    if (tempList.size() > 0) {
-                        tempList.remove(tempList.size() - 1);
-                    }
                     br.close();
 
                     tempLiveField = new LiveField(2);
@@ -176,7 +185,6 @@ public class ChannelFragment extends LazyLoadFragment {
                         public void run() {
 
                             list.add(tempLiveField);  //===========
-
                             channelAdapter.notifyDataSetChanged();
                             recyclerView.setVisibility(View.VISIBLE);
 

@@ -12,20 +12,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kingbox.R;
 import com.kingbox.adapter.BannerPagerAdapter;
 import com.kingbox.adapter.MultiTypeAdapter;
 import com.kingbox.service.entity.Banner;
+import com.kingbox.service.entity.Notice;
 import com.kingbox.service.entity.Title;
-import com.kingbox.ui.activity.BannerActivity;
 import com.kingbox.ui.activity.NoticesActivity;
+import com.kingbox.ui.activity.VideoWebViewActivity;
 import com.kingbox.utils.GlideCatchUtil;
+import com.kingbox.view.ScrollingTextView;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2017/7/12.
@@ -40,7 +50,7 @@ public class TitleViewHolder extends BaseViewHolder<Title> {
 
 
     @BindView(R.id.boradcast_tv)
-    TextView boradcast_tv;
+    ScrollingTextView boradcast_tv;
 
     @BindView(R.id.title_tv)
     TextView namTv;
@@ -86,6 +96,53 @@ public class TitleViewHolder extends BaseViewHolder<Title> {
         } else {
             boradcast_tv.setVisibility(View.GONE);
         }
+        getNotices();
+    }
+
+    private void getNotices() {
+        OkHttpUtils
+                .get()
+                .url("http://kingbox.donewe.com/API/GetNotices?typeId=" + 1)
+                .id(101)   // 请求Id
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.has("Success") && jsonObject.getBoolean("Success")) {
+                                if (jsonObject.has("Content")) {
+                                    JSONArray resultsJson = jsonObject.getJSONArray("Content");
+                                    if (null != resultsJson && resultsJson.length() > 0) {
+                                        List<Notice> portfolioList = new ArrayList<>();
+                                        for (int i = 0; i < resultsJson.length(); i++) {
+                                            JSONObject resultJson = resultsJson.getJSONObject(i);
+                                            Gson gson = new Gson();
+                                            Notice banner = gson.fromJson(resultJson.toString(), Notice.class);
+                                            portfolioList.add(banner);
+                                        }
+                                        /*Message msg = new Message();
+                                        msg.what = 1111;
+                                        msg.obj = portfolioList;
+                                        handler.handleMessage(msg);*/
+                                        if (portfolioList.size() > 0) {
+                                            Notice notice = portfolioList.get(0);
+                                            boradcast_tv.setText(notice.getTitle());
+                                        }
+                                        return;
+                                    }
+                                }
+                            }
+                        } catch (JSONException e) {
+                        }
+                        return;
+                    }
+                });
     }
 
     //  设置轮播小圆点
@@ -145,9 +202,9 @@ public class TitleViewHolder extends BaseViewHolder<Title> {
         @Override
         public void onClick(View v) {
             Banner banner = bannerList.get(position);
-            Intent intent = new Intent(context, BannerActivity.class);
+            Intent intent = new Intent(context, VideoWebViewActivity.class);
             intent.putExtra("url", banner.getUrl());
-            intent.putExtra("type", "1");
+            intent.putExtra("histroy", 0);
             context.startActivity(intent);
         }
     }

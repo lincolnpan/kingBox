@@ -64,12 +64,12 @@ public class UserCenterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_center);
 
-        refreshData();
-        UserInfo info = (UserInfo) getIntent().getSerializableExtra("userInfo");
+        /*UserInfo info = (UserInfo) getIntent().getSerializableExtra("userInfo");
         if (null == info) {
             login();
-        }
+        }*/
         initView();
+        refreshData();
     }
 
     private void refreshData() {
@@ -84,20 +84,22 @@ public class UserCenterActivity extends BaseActivity {
         nameTv.setText(name);
         idTv.setText("id: " + id);
         superMemberEndTimeTv.setText("到期时间：" + expireTime);
+        extremeMemberEndTimeTv.setText("到期时间：" + expireTime);
 
-        int type = PreferencesUtils.getInt(UserCenterActivity.this, "type", -1);
-        if (-1 == type) {
-            getUserAgentType();
-        }
+        //int type = PreferencesUtils.getInt(UserCenterActivity.this, "type", -1);
+
+        getUserAgentType();
+
     }
 
     private void getUserAgentType() {
         String mobile = PreferencesUtils.getString(UserCenterActivity.this, "mobile");
         String token = PreferencesUtils.getString(UserCenterActivity.this, "token");
-        OkHttpUtils.get().url("http://041715.ichengyun.net/api/getUserAgentType?mobile=" + mobile + "&token=" + token).id(1401)   // 请求Id
+        OkHttpUtils.get().url("http://admin.haizisou.cn/api/getUserAgentType?mobile=" + mobile + "&token=" + token).id(1401)   // 请求Id
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
+                Config.isLogin = false;
             }
 
             @Override
@@ -110,6 +112,14 @@ public class UserCenterActivity extends BaseActivity {
                         Config.isLogin = true;
                         PreferencesUtils.putInt(UserCenterActivity.this, "type", userInfo.getType());
                         PreferencesUtils.putString(UserCenterActivity.this, "wechat", userInfo.getWechat());
+                    } else {
+                        if (userInfo.getMsg().contains("token失效")) {
+                            ToastUtils.ToastMessage(UserCenterActivity.this, "登录失效,请重新登录");
+                            startActivity(new Intent(UserCenterActivity.this, LoginActivity.class));
+                            //UserCenterActivity.this.finish();
+                        } else {
+                            ToastUtils.ToastMessage(UserCenterActivity.this, "接口出错");
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -136,6 +146,7 @@ public class UserCenterActivity extends BaseActivity {
                 startActivity(new Intent(UserCenterActivity.this, BoxExplainActivity.class));
                 break;
             case R.id.exit_tv:   // 退出登录
+                Config.isLogin = false;
                 Config.clearUserInfo(UserCenterActivity.this);
                 startActivity(new Intent(UserCenterActivity.this, LoginActivity.class));
                 finish();
@@ -150,7 +161,7 @@ public class UserCenterActivity extends BaseActivity {
                 }*/
                 break;
             case R.id.extreme_member_renew_tv:   // 至尊会员续费
-                ToastUtils.ToastMessage(UserCenterActivity.this, "暂未开放，敬请期待...");
+                //ToastUtils.ToastMessage(UserCenterActivity.this, "暂未开放，敬请期待...");
                 break;
         }
     }
@@ -172,7 +183,7 @@ public class UserCenterActivity extends BaseActivity {
         finish();
     }
 
-    private void login() {
+    /*private void login() {
         String mobile = PreferencesUtils.getString(UserCenterActivity.this, "mobile");
         final String password = PreferencesUtils.getString(UserCenterActivity.this, "passWord");
         OkHttpUtils.get().url("http://041715.ichengyun.net/api/login?mobile=" + mobile + "&password=" + password).id(1400)   // 请求Id
@@ -207,5 +218,5 @@ public class UserCenterActivity extends BaseActivity {
                 }
             }
         });
-    }
+    }*/
 }

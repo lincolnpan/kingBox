@@ -76,7 +76,6 @@ public class LiveFieldListAdapter extends BaseAdapter {
         }
 
         GlideCatchUtil.getInstance().ImageLoading(context, url, userImg, R.drawable.df);
-        //userImg.setImageURI(url);
 
         final View finalConvertView = convertView;
         LinearLayout fieldItemLayout = ViewHolder.getViewById(convertView, R.id.field_list_item_layout);

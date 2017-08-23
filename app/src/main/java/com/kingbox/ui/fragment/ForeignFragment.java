@@ -45,9 +45,6 @@ public class ForeignFragment extends LazyLoadFragment implements PullBaseView.On
     @BindView(R.id.foreign_live)
     PullRecyclerView foreignLive;
 
-    /*@BindView(R.id.foreign_srl)
-    SwipeRefreshLayout foreignSrl;*/
-
     private MultiTypeAdapter adapter = null;
 
     private List<Visitable> list = new ArrayList();
@@ -78,7 +75,6 @@ public class ForeignFragment extends LazyLoadFragment implements PullBaseView.On
                 case 2222:
                     list.add(tempLiveField);
                     adapter.notifyDataSetChanged();
-                    //foreignSrl.setRefreshing(false);
 
                     foreignLive.onHeaderRefreshComplete();
                     break;
@@ -102,7 +98,6 @@ public class ForeignFragment extends LazyLoadFragment implements PullBaseView.On
         foreignLive.addItemDecoration(new RecycleViewDivider(
                 getActivity(), LinearLayoutManager.VERTICAL, 12, getResources().getColor(R.color.transparent)));
 
-        //recyclerView.setId(1000);
         foreignLive.setCanScrollAtRereshing(true);
         foreignLive.setOnRefreshListener(this);
         foreignLive.setCanPullDown(true);   // 下拉刷新
@@ -205,7 +200,7 @@ public class ForeignFragment extends LazyLoadFragment implements PullBaseView.On
                     tempList = new ArrayList<>();
                     InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "GBK");
                     BufferedReader br = new BufferedReader(isr);
-                    String readline = "";
+                    String readline;
                     while ((readline = br.readLine()) != null) {
                         if (!readline.contains("无主播在线") && !TextUtils.isEmpty(readline)) {
                             LiveField liveField = new LiveField(1);
@@ -231,6 +226,7 @@ public class ForeignFragment extends LazyLoadFragment implements PullBaseView.On
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(203);
         OkHttpUtils.getInstance().cancelTag(204);
+        OkHttpUtils.getInstance().cancelTag(208);
     }
 
     @Override

@@ -5,9 +5,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.kingbox.R;
+import com.kingbox.utils.PreferencesUtils;
 
 public class WelcomeActivity extends BaseActivity {
     @Override
@@ -22,13 +24,14 @@ public class WelcomeActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                /*String mobile = PreferencesUtils.getString(WelcomeActivity.this, "mobile");
+                //startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                String mobile = PreferencesUtils.getString(WelcomeActivity.this, "mobile");
                 if (TextUtils.isEmpty(mobile)) {   // 未登录
                     startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
                 } else {   // 已登录
-                    startActivity(new Intent(WelcomeActivity.this, UserCenterActivity.class));
-                }*/
+                    startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                    //startActivity(new Intent(WelcomeActivity.this, UserCenterActivity.class));
+                }
                 finish();
             }
         },3000);

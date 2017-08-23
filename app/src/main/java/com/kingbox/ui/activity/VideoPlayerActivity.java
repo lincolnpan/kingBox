@@ -1,6 +1,7 @@
 package com.kingbox.ui.activity;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
@@ -15,19 +17,27 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kingbox.R;
 import com.kingbox.listener.OnTransitionListener;
+import com.kingbox.service.entity.UserInfo;
 import com.kingbox.utils.Config;
 import com.kingbox.utils.PreferencesUtils;
 import com.kingbox.utils.ToastUtils;
 import com.kingbox.view.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
+import okhttp3.Call;
 
 /**
  * 播放器
@@ -120,11 +130,19 @@ public class VideoPlayerActivity extends BaseActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
+        init();
+    }
+
+    private void init() {
         isTransition = getIntent().getBooleanExtra(TRANSITION, false);
 
 
-        //String url = "http://pili-live-hdl.expiry.pengpengla.com/pepperexpiry/8_8-835621140528365568809b8f49_84661519183933079552e275eee1_8.flv";
         String url = getIntent().getStringExtra("url");
+        if (TextUtils.isEmpty(url)) {
+            ToastUtils.ToastMessage(VideoPlayerActivity.this, "播放地址错误");
+            finish();
+            return;
+        }
         imgUrl = getIntent().getStringExtra("imgUrl");
 
         /*String source1 = url;//"http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
@@ -188,7 +206,50 @@ public class VideoPlayerActivity extends BaseActivity {
         //过渡动画
         initTransition();
 
-        videoPlayer.startPlayLogic();   // 开始播放
+        getUserAgentType();
+    }
+
+    private void getUserAgentType() {
+        String mobile = PreferencesUtils.getString(VideoPlayerActivity.this, "mobile");
+        String token = PreferencesUtils.getString(VideoPlayerActivity.this, "token");
+        OkHttpUtils.get().url("http://admin.haizisou.cn/api/getUserAgentType?mobile=" + mobile + "&token=" + token).id(1501)   // 请求Id
+                .build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Config.isLogin = false;
+                ToastUtils.ToastMessage(VideoPlayerActivity.this, "网络异常");
+                finish();
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Gson gson = new Gson();
+                    UserInfo userInfo = gson.fromJson(jsonObject.toString(), UserInfo.class);
+                    if (userInfo.isSuccess() && 0 == userInfo.getCode()) {  // 成功
+                        Config.isLogin = true;
+                        PreferencesUtils.putInt(VideoPlayerActivity.this, "type", userInfo.getType());
+                        PreferencesUtils.putString(VideoPlayerActivity.this, "wechat", userInfo.getWechat());
+                        videoPlayer.startPlayLogic();   // 开始播放
+                    } else {
+                        if (userInfo.getMsg().contains("token失效")) {
+                            ToastUtils.ToastMessage(VideoPlayerActivity.this, "登录失效,请重新登录");
+                            finish();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(new Intent(VideoPlayerActivity.this, LoginActivity.class));
+                                }
+                            }, 300);
+                        } else {
+                            ToastUtils.ToastMessage(VideoPlayerActivity.this, "接口出错");
+                        }
+                    }
+                } catch (JSONException e) {
+                }
+            }
+        });
     }
 
     private void initTransition() {
@@ -255,6 +316,7 @@ public class VideoPlayerActivity extends BaseActivity {
         if (0 != seconds) {
             PreferencesUtils.putInt(VideoPlayerActivity.this, Config.recordTime, seconds);
         }
+        OkHttpUtils.getInstance().cancelTag(1501);
         super.onDestroy();
     }
 }

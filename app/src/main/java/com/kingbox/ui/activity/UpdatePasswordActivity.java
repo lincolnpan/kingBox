@@ -1,5 +1,6 @@
 package com.kingbox.ui.activity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -92,7 +93,7 @@ public class UpdatePasswordActivity extends BaseActivity {
         //http://041715.ichengyun.net/api/updatePassword?mobile=13011223344&password=1&newPassword=2&token=f8c3bc25-bd8c-4388-b4f4-db9ced0cdc3a
         String mobile = PreferencesUtils.getString(UpdatePasswordActivity.this, "mobile");
         String token = PreferencesUtils.getString(UpdatePasswordActivity.this, "token");
-        OkHttpUtils.get().url("http://041715.ichengyun.net/api/updatePassword?mobile=" + mobile + "&password=" + oldPassWord + "&newPassword=" + newPassWord + "&token=" + token).id(1200)   // 请求Id
+        OkHttpUtils.get().url("http://admin.haizisou.cn/api/updatePassword?mobile=" + mobile + "&password=" + oldPassWord + "&newPassword=" + newPassWord + "&token=" + token).id(1200)   // 请求Id
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -112,9 +113,16 @@ public class UpdatePasswordActivity extends BaseActivity {
                         ToastUtils.ToastMessage(UpdatePasswordActivity.this, "修改成功");
                         finish();
                     } else {  // 失败
-                        ToastUtils.ToastMessage(UpdatePasswordActivity.this, userInfo.getMsg());
-                        updateTv.setVisibility(View.VISIBLE);
-                        updatePB.setVisibility(View.GONE);
+                        if (userInfo.getMsg().contains("token失效")) {
+                            ToastUtils.ToastMessage(UpdatePasswordActivity.this, "登录失效,请重新登录");
+                            startActivity(new Intent(UpdatePasswordActivity.this, LoginActivity.class));
+                            UpdatePasswordActivity.this.finish();
+                        } else {
+                            ToastUtils.ToastMessage(UpdatePasswordActivity.this, userInfo.getMsg());
+                            updateTv.setVisibility(View.VISIBLE);
+                            updatePB.setVisibility(View.GONE);
+                            ToastUtils.ToastMessage(UpdatePasswordActivity.this, "接口出错");
+                        }
                     }
 
                 } catch (JSONException e) {

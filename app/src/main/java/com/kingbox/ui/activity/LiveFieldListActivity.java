@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.kingbox.R;
 import com.kingbox.adapter.LiveFieldListAdapter;
 import com.kingbox.service.entity.LiveField;
+import com.kingbox.utils.PreferencesUtils;
 import com.kingbox.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -138,7 +139,7 @@ public class LiveFieldListActivity extends BaseActivity {
 
             centerTitleTv.setText(title);
             urlMsg = urlMsg.substring(index+3, urlMsg.length()-1);
-            url = "http://bee.donewe.com/" + urlMsg + ".txt";
+            url = PreferencesUtils.getString(LiveFieldListActivity.this, "ziFile", "") + urlMsg + ".txt";
         }
         getData();
     }
@@ -150,7 +151,11 @@ public class LiveFieldListActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.user_img:
-                startActivity(new Intent(LiveFieldListActivity.this, LoginActivity.class));
+                String mobile = PreferencesUtils.getString(LiveFieldListActivity.this, "mobile", "");
+                if (TextUtils.isEmpty(mobile))
+                    startActivity(new Intent(LiveFieldListActivity.this, LoginActivity.class));
+                else
+                    startActivity(new Intent(LiveFieldListActivity.this, UserCenterActivity.class));
                 break;
         }
     }
@@ -158,18 +163,13 @@ public class LiveFieldListActivity extends BaseActivity {
     public void getData() {
         liveFieldList.clear();
 
-        OkHttpUtils//
-                .get()//
-                .tag(111)
-                .url(url)//
-                .build()//
-                .execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(), "11111.txt")//
+        OkHttpUtils.get().tag(111).url(url).build()
+         .execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(), "11111.txt")//
                 {
 
                     @Override
                     public void onBefore(Request request, int id)
-                    {
-                    }
+                    {}
 
                     @Override
                     public void inProgress(float progress, long total, int id)
@@ -210,7 +210,7 @@ public class LiveFieldListActivity extends BaseActivity {
                                     public void run() {
                                         LiveFieldListActivity.this.finish();
                                     }
-                                }, 1500);
+                                }, 500);
 
                                 return;
                             }

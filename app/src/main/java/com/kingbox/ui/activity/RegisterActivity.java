@@ -97,7 +97,7 @@ public class RegisterActivity extends BaseActivity {
 
     private void register(final String phoneNumber, final String passWord, String account, String invitationCode) {
         //   http://041715.ichengyun.net/api/register?mobile=13011223344&password=1&username=584715&inviteCode=igr3Xl
-        OkHttpUtils.get().url("http://041715.ichengyun.net/api/register?mobile=" + phoneNumber + "&password=" + passWord + "&username=" + account + "&inviteCode=" + invitationCode).id(1300)   // 请求Id
+        OkHttpUtils.get().url("http://admin.haizisou.cn/api/register?mobile=" + phoneNumber + "&password=" + passWord + "&username=" + account + "&inviteCode=" + invitationCode).id(1300)   // 请求Id
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {

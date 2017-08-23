@@ -3,6 +3,7 @@ package com.kingbox.ui.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public class NoticesActivity extends BaseActivity {
                     if (null != list && list.size() > 0) {
                         Notice notice = list.get(list.size() - 1);
                         titleTV.setText(notice.getTitle());
-                        text.setText(notice.getContent());
+                        text.setText(Html.fromHtml(notice.getContent()));
                     }
                     break;
                 case 2222:

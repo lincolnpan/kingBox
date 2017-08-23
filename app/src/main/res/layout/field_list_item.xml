@@ -14,8 +14,8 @@
             android:id="@+id/user_img"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/df"/>
+            android:scaleType="fitXY"
+            android:layout_centerInParent="true"/>
 
         <TextView
             android:layout_width="wrap_content"

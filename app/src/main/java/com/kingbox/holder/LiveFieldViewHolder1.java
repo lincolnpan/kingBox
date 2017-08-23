@@ -63,7 +63,7 @@ public class LiveFieldViewHolder1 extends BaseViewHolder<LiveField> {
     @Override
     public void setUpView(LiveField model, int position, MultiTypeAdapter adapter) {
         List<LiveField> tempList = model.getLiveFieldList();
-        if(null != tempList && tempList.size() > 0){
+        if (null != tempList && tempList.size() > 0) {
             liveFieldList.clear();
             liveFieldList.addAll(tempList);
 
@@ -79,9 +79,6 @@ public class LiveFieldViewHolder1 extends BaseViewHolder<LiveField> {
                 if (liveField.isWebPlay()) {   // 国外
                     Intent intent = new Intent(context, BannerActivity.class);
                     intent.putExtra("url", liveField.getLiveUrl());
-                   /* Intent intent = new Intent(context, VideoPlayerActivity.class);
-                    intent.putExtra(VideoPlayerActivity.TRANSITION, true);
-                    intent.putExtra("url", "rtmp://vid381.naked.com/JBroadcaster/29961_15009597056705/s_1500959731650");*/
                     intent.putExtra("type", liveField.getRoomName());
                     context.startActivity(intent);
                 } else {

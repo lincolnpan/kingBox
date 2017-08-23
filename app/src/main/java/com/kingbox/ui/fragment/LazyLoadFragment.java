@@ -72,5 +72,4 @@ public abstract class LazyLoadFragment extends Fragment {
      */
     public abstract void loadData();
 
-
 }

@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#222222">
+        android:background="#222222"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/refresh_img"
@@ -41,17 +42,12 @@
             android:src="@drawable/home_icon" />
     </RelativeLayout>
 
-    <WebView
+    <com.tencent.smtt.sdk.WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_layout"
         android:layout_below="@+id/banner_top_layout" />
-
-    <FrameLayout
-        android:id="@+id/videoContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/play_img"
@@ -59,5 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/play_icon" />
+        android:src="@drawable/play_icon"
+        android:visibility="gone"/>
 </RelativeLayout>

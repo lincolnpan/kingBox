@@ -26,7 +26,8 @@
         android:id="@+id/hint_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="无数据或数据加载异常"
+        android:paddingTop="20dp"
+        android:text="暂无视频数据"
         android:gravity="center"
         android:layout_centerInParent="true"
         android:visibility="gone"/>

@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import com.kingbox.R;
 import com.kingbox.adapter.TvAdapter;
 import com.kingbox.service.entity.Tv;
-import com.kingbox.ui.activity.VideoPlayerActivity;
+import com.kingbox.ui.activity.VideoWebViewActivity;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -80,9 +80,9 @@ public class TvListFragment extends LazyLoadFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tv tv = tvs.get(position);
                 //Intent intent = new Intent(getActivity(), BannerActivity.class);
-                Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+                Intent intent = new Intent(getActivity(), VideoWebViewActivity.class);
                 intent.putExtra("url", tv.getUrl());
-                intent.putExtra("type", "1");
+                intent.putExtra("histroy", 0);
                 startActivity(intent);
             }
         });

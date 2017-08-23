@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity {
                     100);
         }
 
-        List<Activity> activitieList = mApplication.getActivityList();
+        /*List<Activity> activitieList = mApplication.getActivityList();
         if (null != activitieList && activitieList.size() > 0) {
             Activity tempActivity = null;
             for (Activity activity : activitieList) {
@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity {
             }
             if (null != tempActivity)
                 tempActivity.finish();
-        }
+        }*/
     }
 
     @OnClick({R.id.login_tv, R.id.forget_password_tv, R.id.register_tv})
@@ -123,13 +123,14 @@ public class LoginActivity extends BaseActivity {
     private void login(String mobile, final String password) {
         // 获取用户的代理类型:http://041715.ichengyun.net/api/getUserAgentType?mobile=13011223346&token=98c019f5-42f4-42b7-b356-1f78b33cf78f
 
-        OkHttpUtils.get().url("http://041715.ichengyun.net/api/login?mobile=" + mobile + "&password=" + password).id(1100)   // 请求Id
+        OkHttpUtils.get().url("http://admin.haizisou.cn/api/login?mobile=" + mobile + "&password=" + password).id(1100)   // 请求Id
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 ToastUtils.ToastMessage(LoginActivity.this, "网络异常或服务器异常，登录失败");
                 loginTv.setVisibility(View.VISIBLE);
                 loginPB.setVisibility(View.GONE);
+                Config.isLogin = false;
             }
 
             @Override
@@ -142,9 +143,19 @@ public class LoginActivity extends BaseActivity {
                         Config.isLogin = true;
                         userInfo.setPassWord(password);
                         Config.setUserInfo(LoginActivity.this, userInfo);   // 保存用户信息
-                        Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
-                        intent.putExtra("userInfo", userInfo);
-                        startActivity(intent);
+                        /*Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
+                        intent.putExtra("userInfo", userInfo);*/
+                        boolean hasMain = false;
+                        List<Activity> activityList = mApplication.getActivityList();
+                        for (Activity activity : activityList) {
+                            if (activity instanceof MainActivity) {
+                                hasMain = true;
+                                break;
+                            }
+                        }
+                        if (!hasMain) {
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        }
                         finish();
                     } else {  // 失败
                         Config.isLogin = true;

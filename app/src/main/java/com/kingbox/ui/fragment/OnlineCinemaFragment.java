@@ -19,10 +19,10 @@ import com.kingbox.adapter.BannerPagerAdapter;
 import com.kingbox.adapter.VideoAdapter;
 import com.kingbox.service.entity.Banner;
 import com.kingbox.service.entity.Cinema;
-import com.kingbox.ui.activity.BannerActivity;
+import com.kingbox.ui.activity.BookmarkActivity;
+import com.kingbox.ui.activity.HistroyActivity;
 import com.kingbox.ui.activity.NoticesActivity;
 import com.kingbox.ui.activity.VideoWebViewActivity;
-import com.kingbox.ui.activity.WebViewActivity;
 import com.kingbox.utils.GlideCatchUtil;
 import com.kingbox.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -129,23 +129,8 @@ public class OnlineCinemaFragment extends LazyLoadFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cinema cinema = list.get(position);
-                //Intent intent = new Intent(getActivity(), WebActivity.class);
-                //Intent intent = new Intent(getActivity(), BannerActivity.class);
                 Intent intent = new Intent(getActivity(), VideoWebViewActivity.class);
-                //Intent intent = new Intent(getActivity(), BannerActivity.class);
-                //intent.putExtra("url", "http://m.v.qq.com/index.html");
-                //intent.putExtra("url", "http://www.youku.com/");
-                /*_urlArray = @[@"http://film.qq.com/weixin/all.html",
-                @"http://m.iqiyi.com/vip/",
-                @"http://m.le.com/vip/?ref=syhy_m",
-                @"http://m.mgtv.com/#/channel/home",
-                @"https://m.vip.youku.com/",
-                @"http://m.tv.sohu.com/film",
-                @"http://www.tudou.com/"];*/
-
                 intent.putExtra("url", cinema.getAddress());
-                intent.putExtra("type", "2");
-                //intent.putExtra("url", "http://list.donewe.com/kkflv/index.php?url=http://m.iqiyi.com/v_19rr7tg8js.html");
                 startActivity(intent);
             }
         });
@@ -252,22 +237,22 @@ public class OnlineCinemaFragment extends LazyLoadFragment {
                 startActivity(intent);
                 break;
             case R.id.bookmark_img:   //书签
-
-                ToastUtils.ToastMessage(getActivity(), "暂未开放,敬请期待");
+                startActivity(new Intent(getActivity(), BookmarkActivity.class));
+                //ToastUtils.ToastMessage(getActivity(), "暂未开放,敬请期待");
                 break;
             case R.id.cache_off_img:   //离线缓存
                 ToastUtils.ToastMessage(getActivity(), "暂未开放,敬请期待");
                 break;
             case R.id.history_look_img:   // 历史记录
-                startActivity(new Intent(getActivity(), WebViewActivity.class));
+                startActivity(new Intent(getActivity(), HistroyActivity.class));
+
                 break;
             case R.id.cinema_release_load:
-                /*if (list.size() == 0) {
+                if (list.size() == 0) {
                     cinemaPb.setVisibility(View.VISIBLE);
                     cinemaReleaseLoad.setVisibility(View.GONE);
                     getBanner();
-                }*/
-                startActivity(new Intent(getActivity(), WebViewActivity.class));
+                }
                 break;
         }
     }
@@ -329,9 +314,9 @@ public class OnlineCinemaFragment extends LazyLoadFragment {
         @Override
         public void onClick(View v) {
             Banner banner = banners.get(position);
-            Intent intent = new Intent(getActivity(), BannerActivity.class);
+            Intent intent = new Intent(getActivity(), VideoWebViewActivity.class);
             intent.putExtra("url", banner.getUrl());
-            intent.putExtra("type", "1");
+            intent.putExtra("histroy", 0);
             startActivity(intent);
         }
     }

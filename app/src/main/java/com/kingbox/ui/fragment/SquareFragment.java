@@ -4,7 +4,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -49,9 +48,6 @@ public class SquareFragment extends LazyLoadFragment implements PullBaseView.OnR
     @BindView(R.id.progress)
     ProgressBar progressBar;
 
-    /*@BindView(R.id.srl)
-    SwipeRefreshLayout swipeRefresh;*/
-
     private MultiTypeAdapter adapter = null;
 
     private List<Visitable> list = new ArrayList<>();
@@ -59,10 +55,6 @@ public class SquareFragment extends LazyLoadFragment implements PullBaseView.OnR
     private LiveField tempLiveField = new LiveField(1);
 
     private List<LiveField> tempList;
-
-    //private boolean mIsRefreshing = false;
-
-    //private List<LiveField> lives = new ArrayList<>();
 
 
     private Handler handler = new Handler(){
@@ -102,7 +94,6 @@ public class SquareFragment extends LazyLoadFragment implements PullBaseView.OnR
                     if (page > 1){
                         recyclerView.onFooterRefreshComplete(lfs.size() - LIMIT);
                     } else {
-                        recyclerView.onHeaderRefreshComplete();
                         lfs.clear();
                     }
                     lfs.addAll(tempLives);
@@ -121,6 +112,7 @@ public class SquareFragment extends LazyLoadFragment implements PullBaseView.OnR
                         list.add(tempLiveField);
                     }
                     adapter.notifyItemChanged(1);
+                    recyclerView.onHeaderRefreshComplete();
                     break;
             }
         }
@@ -168,20 +160,11 @@ public class SquareFragment extends LazyLoadFragment implements PullBaseView.OnR
         recyclerView.addItemDecoration(new RecycleViewDivider(
                 getActivity(), LinearLayoutManager.VERTICAL, 12, getResources().getColor(R.color.transparent)));
 
-        //recyclerView.setId(1000);
         recyclerView.setCanScrollAtRereshing(true);
         recyclerView.setOnRefreshListener(this);   // 刷新监听
         recyclerView.setCanPullDown(true);   // 下拉刷新
         recyclerView.setCanPullUp(false);   // 加载跟多
 
-       /* recyclerView.setOnTouchListener(
-                new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return mIsRefreshing;
-                    }
-                }
-        );*/
 
         if (null == adapter) {
             adapter = new MultiTypeAdapter(list);
@@ -189,29 +172,6 @@ public class SquareFragment extends LazyLoadFragment implements PullBaseView.OnR
         recyclerView.setAdapter(adapter);
         recyclerView.setVisibility(View.VISIBLE);
 
-        /*swipeRefresh.setColorSchemeResources(R.color.grey);   // 设置下拉刷新样式颜色
-        swipeRefresh.post(new Runnable() {
-            @Override
-            public void run() {   // 设置自动刷新
-                swipeRefresh.setRefreshing(true);
-            }
-        });
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {   // 手动下拉刷新
-                page = 1;
-                getBannerData();
-                *//* new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        swipeRefresh.setRefreshing(true);
-                        *//**//*ToastUtils.ToastMessage(getActivity(), "数据太多，加载太慢啦");
-                        swipeRefresh.setRefreshing(false);*//**//*
-                    }
-                });*//*
-            }
-        });*/
     }
 
     @Override
@@ -220,9 +180,6 @@ public class SquareFragment extends LazyLoadFragment implements PullBaseView.OnR
     }
 
     private void getBannerData() {
-        //mIsRefreshing = true;
-
-        //list.clear();
 
         OkHttpUtils.get().url("http://kingbox.donewe.com/API/GetAds?typeId=1").tag(103)   // 请求Id
                 .build().execute(new StringCallback() {

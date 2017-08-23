@@ -142,8 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:background="@drawable/extreme_member_bg"
-            android:visibility="gone">
+            android:background="@drawable/extreme_member_bg">
 
             <ImageView
                 android:id="@+id/extreme_member_img"
@@ -164,7 +163,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="至尊会员"
+                    android:text="影视会员"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
@@ -187,7 +186,7 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/renew_bg"
                 android:gravity="center"
-                android:text="我要续费"
+                android:text="免费"
                 android:textColor="#373737"/>
         </RelativeLayout>
 

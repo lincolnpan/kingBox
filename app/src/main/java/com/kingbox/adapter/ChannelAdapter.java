@@ -28,6 +28,8 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.VHolder>
 
     private FieldRVAdapter fieldRVAdapter;
 
+    private String baseUrl = "";
+
     private List<LiveField> liveFieldList = new ArrayList<>();  // 子数据
 
     public ChannelAdapter(Context context, List<LiveField> liveFieldList){
@@ -55,6 +57,10 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.VHolder>
         return list.size();
     }
 
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
     class VHolder extends RecyclerView.ViewHolder{
         RecyclerView rv;
         public VHolder(View itemView) {
@@ -78,6 +84,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.VHolder>
             liveFieldList.addAll(liveField.getLiveFieldList());
 
             fieldRVAdapter = new FieldRVAdapter(context,liveFieldList);
+            fieldRVAdapter.setBaseUrl(baseUrl);
             rv.setAdapter(fieldRVAdapter);
             fieldRVAdapter.setOnItemClickListener(new FieldRVAdapter.OnItemClickListener() {
                 @Override

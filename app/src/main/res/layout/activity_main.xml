@@ -26,18 +26,11 @@
             android:paddingTop="6dp">
 
             <ImageView
-                android:id="@+id/live_square_img"
+                android:id="@+id/online_cinema_img"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/live_square_selected_icon"/>
-
-            <ImageView
-                android:id="@+id/welfare_video_img"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/welfare_video_icon"/>
+                android:src="@drawable/online_cinema_selected_icon"/>
 
             <ImageView
                 android:id="@+id/star_tv_live_img"
@@ -47,11 +40,18 @@
                 android:src="@drawable/star_tv_live_icon"/>
 
             <ImageView
-                android:id="@+id/online_cinema_img"
+                android:id="@+id/welfare_video_img"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/online_cinema_icon"/>
+                android:src="@drawable/welfare_video_icon"/>
+
+            <ImageView
+                android:id="@+id/live_square_img"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/live_square_icon"/>
         </LinearLayout>
     </LinearLayout>
 

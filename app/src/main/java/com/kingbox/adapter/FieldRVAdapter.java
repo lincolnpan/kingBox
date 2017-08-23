@@ -25,6 +25,8 @@ public class FieldRVAdapter extends RecyclerView.Adapter<FieldRVAdapter.ListHold
     private Context context;
 
     private List<LiveField> list;
+    private String baseUrl = "";
+
     public FieldRVAdapter(Context context, List<LiveField> list){
         this.context = context;
         this.list = list;
@@ -47,6 +49,10 @@ public class FieldRVAdapter extends RecyclerView.Adapter<FieldRVAdapter.ListHold
         if (null == list)
             return 0;
         return list.size();
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     class ListHolder extends RecyclerView.ViewHolder {
@@ -82,8 +88,7 @@ public class FieldRVAdapter extends RecyclerView.Adapter<FieldRVAdapter.ListHold
                     msg = "";
                 }
 
-                GlideCatchUtil.getInstance().ImageLoading(context, "http://bee.donewe.com/" + msg, userImg);
-                //userImg.setImageURI("http://bee.donewe.com/" + msg);
+                GlideCatchUtil.getInstance().ImageLoading(context, baseUrl + msg, userImg, R.drawable.df);
             } else {
                 nameTv.setText("国外直播秀场");
             }
